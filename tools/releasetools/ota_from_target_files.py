@@ -283,12 +283,6 @@ class BuildInfo(object):
     device: The device name, which could come from OEM dicts if applicable.
   """
 
-  _RO_PRODUCT_RESOLVE_PROPS = ["ro.product.brand", "ro.product.device",
-                               "ro.product.manufacturer", "ro.product.model",
-                               "ro.product.name"]
-  _RO_PRODUCT_PROPS_DEFAULT_SOURCE_ORDER = ["product", "product_services",
-                                            "odm", "vendor", "system"]
-
   def __init__(self, info_dict, oem_dicts):
     """Initializes a BuildInfo instance with the given dicts.
 
@@ -369,14 +363,12 @@ class BuildInfo(object):
 
   def GetBuildProp(self, prop):
     """Returns the inquired build property."""
-    if prop in BuildInfo._RO_PRODUCT_RESOLVE_PROPS:
-      return self._ResolveRoProductBuildProp(prop)
-
     try:
       return self.info_dict.get("build.prop", {})[prop]
     except KeyError:
       raise common.ExternalError("couldn't find %s in build.prop" % (prop,))
 
+<<<<<<< HEAD
   def _ResolveRoProductBuildProp(self, prop):
     """Resolves the inquired ro.product.* build property"""
     prop_val = self.info_dict.get("build.prop", {}).get(prop)
@@ -433,6 +425,9 @@ class BuildInfo(object):
             self.GetBuildProp("ro.build.version.incremental"),
             self.GetBuildProp("ro.build.type"),
             self.GetBuildProp("ro.build.tags"))
+=======
+      return self.GetBuildProp("ro.build.fingerprint")
+>>>>>>> 780e60e08... Revert "Allow properties to be derived from partition-specific properties"
     return "%s/%s/%s:%s" % (
         self.GetOemProperty("ro.product.brand"),
         self.GetOemProperty("ro.product.name"),
